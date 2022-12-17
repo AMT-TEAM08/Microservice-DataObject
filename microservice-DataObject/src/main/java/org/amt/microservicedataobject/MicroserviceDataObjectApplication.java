@@ -9,5 +9,4 @@ public class MicroserviceDataObjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(MicroserviceDataObjectApplication.class, args);
     }
-
 }
