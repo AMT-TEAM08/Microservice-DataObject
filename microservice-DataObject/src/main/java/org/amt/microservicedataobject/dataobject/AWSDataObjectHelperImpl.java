@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 
@@ -78,6 +79,9 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @param file to be uploaded
      */
     public void add(String targetFileName, File file) {
+        Objects.requireNonNull(targetFileName, "targetFileName must not be null");
+        Objects.requireNonNull(file, "file must not be null");
+
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(targetFileName)
