@@ -1,5 +1,7 @@
 package org.amt.microservicedataobject.dataobject;
 
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
@@ -58,19 +60,25 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * List files contained in the bucket
      * @return Objects names
      */
-    public Vector<String> listObjects() {
+    public Vector<String> listObjects() throws DataObjectHelperException {
         Vector<String> keys = new Vector<>();
         ListObjectsRequest listObjects = ListObjectsRequest
                 .builder()
                 .bucket(BUCKET)
                 .build();
 
-        ListObjectsResponse res = s3.listObjects(listObjects);
-        List<S3Object> objects = res.contents();
-        for (S3Object myValue : objects)
-            keys.add(myValue.key());
+        try {
+            ListObjectsResponse res = s3.listObjects(listObjects);
+            List<S3Object> objects = res.contents();
+            for (S3Object myValue : objects)
+                keys.add(myValue.key());
 
-        return keys;
+            return keys;
+        } catch (NoSuchBucketException e) {
+            throw new DataObjectNotFoundException("Bucket not found" + e.getMessage());
+        } catch (S3Exception e) {
+            throw new DataObjectHelperException("Error listing objects" + e.getMessage());
+        }
     }
 
     /**
@@ -78,7 +86,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @param targetFileName uploaded file name
      * @param file to be uploaded
      */
-    public void add(String targetFileName, File file) {
+    public void add(String targetFileName, File file) throws NullPointerException, DataObjectHelperException {
         Objects.requireNonNull(targetFileName, "targetFileName must not be null");
         Objects.requireNonNull(file, "file must not be null");
 
@@ -87,8 +95,16 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
                 .key(targetFileName)
                 .build();
 
-        // Upload file to bucket
-        s3.putObject(objectRequest, RequestBody.fromFile(file));
+        try {
+            // Upload file to bucket
+            s3.putObject(objectRequest, RequestBody.fromFile(file));
+        } catch (S3Exception e) {
+            throw new DataObjectException("Error adding object" + e.getMessage());
+        } catch (AwsServiceException e) {
+            throw new ServiceException("Error adding object" + e.getMessage());
+        } catch (SdkClientException e) {
+            throw new ClientException("Error adding object" + e.getMessage());
+        }
     }
 
     /**
@@ -96,30 +112,56 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @param fileName to be downloaded
      * @return file content in byte array
      */
-    public byte[] get(String fileName) throws IOException {
+    public byte[] get(String fileName) throws DataObjectHelperException {
+        Objects.requireNonNull(fileName, "fileName must not be null");
+
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(fileName)
                 .build();
         byte[] imageInByte;
 
-        InputStream stream = s3.getObject(getObjectRequest);
-        imageInByte = IoUtils.toByteArray(stream);
+        try {
+            InputStream stream = s3.getObject(getObjectRequest);
 
-        return imageInByte;
+            imageInByte = IoUtils.toByteArray(stream);
+
+            return imageInByte;
+        } catch (NoSuchKeyException e) {
+            throw new KeyNotFoundException("Object not found" + e.getMessage());
+        } catch (InvalidObjectStateException e) {
+            throw new AccessDeniedException("Access denied" + e.getMessage());
+        } catch (S3Exception e) {
+            throw new DataObjectException("Error getting object" + e.getMessage());
+        } catch (AwsServiceException e) {
+            throw new ServiceException("Error getting object" + e.getMessage());
+        } catch (SdkClientException e) {
+            throw new ClientException("Error getting object" + e.getMessage());
+        } catch (IOException e) {
+            throw new DataObjectException("Error while reading object" + e.getMessage());
+        }
     }
 
     /**
      * Delete a file in the bucket*
      * @param fileName to delete
      */
-    public void delete(String fileName) {
+    public void delete(String fileName) throws DataObjectHelperException {
+        Objects.requireNonNull(fileName, "fileName must not be null");
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(fileName)
                 .build();
 
+        try {
         s3.deleteObject(deleteObjectRequest);
+        } catch (S3Exception e) {
+            throw new DataObjectException("Error deleting object" + e.getMessage());
+        } catch (AwsServiceException e) {
+            throw new ServiceException("Error deleting object" + e.getMessage());
+        } catch (SdkClientException e) {
+            throw new ClientException("Error deleting object" + e.getMessage());
+        }
     }
 
     /**
@@ -127,7 +169,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @param fileName to check
      * @return true if the file exists, false otherwise
      */
-    public boolean exists(String fileName) {
+    public boolean exists(String fileName) throws DataObjectHelperException {
         HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(fileName)
@@ -137,6 +179,12 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
             return true;
         } catch (NoSuchKeyException e) {
             return false;
+        } catch (S3Exception e) {
+            throw new DataObjectException("Error checking object" + e.getMessage());
+        } catch (AwsServiceException e) {
+            throw new ServiceException("Error checking object" + e.getMessage());
+        } catch (SdkClientException e) {
+            throw new ClientException("Error checking object" + e.getMessage());
         }
     }
 
@@ -145,10 +193,11 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @param fileName of the requested file
      * @return Url to linking to a file
      */
-    public URL getUrl(String fileName) {
+    public URL getUrl(String fileName) throws DataObjectHelperException {
+        Objects.requireNonNull(fileName, "fileName must not be null");
 
         if(!exists(fileName))
-            throw new IllegalArgumentException("File not found");
+            throw new KeyNotFoundException("Object not found");
 
         // Create an S3Presigner using the default region and credentials.
         // This is usually done at application startup, because creating a presigner can be expensive.
@@ -162,7 +211,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
 
         // Create a GetObjectPresignRequest to specify the signature duration
         GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(10)) // TODO duration as parameter or constant
                 .getObjectRequest(getObjectRequest)
                 .build();
 

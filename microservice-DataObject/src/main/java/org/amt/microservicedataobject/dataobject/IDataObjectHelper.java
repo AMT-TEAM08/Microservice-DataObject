@@ -19,13 +19,13 @@ public interface IDataObjectHelper {
      * @param file to uplead
      * @throws IOException if an error occurs
      */
-    void add(String fileName, File file) throws IOException;
+    void add(String fileName, File file) throws NullPointerException, DataObjectHelperException;
 
     /**
      * List files in the container *
      * @return file names
      */
-    Vector<String> listObjects();
+    Vector<String> listObjects() throws DataObjectHelperException;
 
     /**
      * Get file content*
@@ -33,20 +33,20 @@ public interface IDataObjectHelper {
      * @return File content
      * @throws IOException if the file is not found
      */
-    byte[] get(String fileName) throws IOException;
+    byte[] get(String fileName) throws DataObjectHelperException;
 
     /**
      * Delete a file in the container *
      * @param fileName to delete
      */
-    void delete(String fileName);
+    void delete(String fileName) throws DataObjectHelperException;
 
     /**
      * Get a public url to pointing to a given file *
      * @param fileName to get
      * @return Url to the file
      */
-    URL getUrl(String fileName);
+    URL getUrl(String fileName) throws DataObjectHelperException;
 
     /**
      * @return The container's name
@@ -58,7 +58,48 @@ public interface IDataObjectHelper {
      * @param fileName to check
      * @return true if the file exists
      */
-    boolean exists(String fileName);
+    boolean exists(String fileName) throws DataObjectHelperException;
 
 
+    class DataObjectHelperException extends Exception {
+        public DataObjectHelperException(String message) {
+            super(message);
+        }
+    }
+
+    class ServiceException extends DataObjectHelperException {
+        public ServiceException(String message) {
+            super(message);
+        }
+    }
+
+    class ClientException extends DataObjectHelperException {
+        public ClientException(String message) {
+            super(message);
+        }
+    }
+
+    class DataObjectException extends DataObjectHelperException {
+        public DataObjectException(String message) {
+            super(message);
+        }
+    }
+
+    class DataObjectNotFoundException extends DataObjectException {
+        public DataObjectNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    class KeyNotFoundException extends DataObjectException {
+        public KeyNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    class AccessDeniedException extends DataObjectException {
+        public AccessDeniedException(String message) {
+            super(message);
+        }
+    }
 }

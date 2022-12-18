@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.List;
+import java.net.URL;
 
 @RestController
 public class DataObjectController {
@@ -21,8 +21,16 @@ public class DataObjectController {
     }
 
     @GetMapping("/objects")
-    public List<String> listObjects() {
-        return dataObjectHelper.listObjects();
+    public ResponseEntity<Object> listObjects() {
+        try {
+            return new ResponseEntity<>(dataObjectHelper.listObjects(), HttpStatus.OK);
+        } catch (IDataObjectHelper.AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (IDataObjectHelper.DataObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @RequestMapping(value = "/objects", method = RequestMethod.POST, consumes = {"multipart/form-data"})
@@ -33,6 +41,18 @@ public class DataObjectController {
             System.out.println("File uploaded: " + tempFile.getAbsolutePath() + " " + tempFile.length());
             dataObjectHelper.add(file.getOriginalFilename(), tempFile);
             return ResponseEntity.ok().build();
+        } catch (NullPointerException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/objects/{objectName}")
+    public ResponseEntity<String> getObject(@PathVariable String objectName) {
+        try {
+            URL downloadURL = dataObjectHelper.getUrl(objectName);
+            return ResponseEntity.ok().body(downloadURL.toString());
         } catch (NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
