@@ -73,7 +73,7 @@ class MicroserviceDataObjectApplicationTests {
     }
 
     @Test
-    public void getObjectShouldReturnObject() throws Exception { // TODO
+    public void getObjectShouldReturnURL() throws Exception {
         // Given
         String url = getBaseUrl() + "/objects";
         MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
@@ -84,11 +84,11 @@ class MicroserviceDataObjectApplicationTests {
         ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME, String.class);
 
         // Then
-        assertEquals(FILE_PARAM_NAME, response.getBody());
+        assertTrue(Objects.requireNonNull(response.getBody()).contains("http"));
     }
 
     @Test
-    public void getObjectShouldReturnOk() throws Exception { // TODO
+    public void getObjectShouldReturnOk() throws Exception {
         // Given
         String url = getBaseUrl() + "/objects";
         MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
@@ -100,6 +100,19 @@ class MicroserviceDataObjectApplicationTests {
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getObjectShouldReturnNotFound() {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        String notExistingFile = "MXEV1BN39ZFD9MBZC98H";
+
+        // When
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + notExistingFile, String.class);
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

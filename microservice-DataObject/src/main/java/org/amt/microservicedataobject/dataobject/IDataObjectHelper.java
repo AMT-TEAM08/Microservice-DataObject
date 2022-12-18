@@ -17,7 +17,6 @@ public interface IDataObjectHelper {
      * Upload a file *
      * @param fileName given file name
      * @param file to uplead
-     * @throws IOException if an error occurs
      */
     void add(String fileName, File file) throws NullPointerException, DataObjectHelperException;
 
@@ -31,7 +30,6 @@ public interface IDataObjectHelper {
      * Get file content*
      * @param fileName to get
      * @return File content
-     * @throws IOException if the file is not found
      */
     byte[] get(String fileName) throws DataObjectHelperException;
 
