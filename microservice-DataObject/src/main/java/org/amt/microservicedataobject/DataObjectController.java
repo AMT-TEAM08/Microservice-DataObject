@@ -68,4 +68,20 @@ public class DataObjectController {
         }
     }
 
+    @DeleteMapping("/objects/{objectName}")
+    public ResponseEntity<Object> deleteObject(@PathVariable String objectName) {
+        try {
+            dataObjectHelper.delete(objectName);
+            return ResponseEntity.ok().build();
+        } catch (NullPointerException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IDataObjectHelper.AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (IDataObjectHelper.KeyNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

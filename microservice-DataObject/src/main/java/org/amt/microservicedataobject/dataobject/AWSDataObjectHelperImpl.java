@@ -148,13 +148,18 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      */
     public void delete(String fileName) throws DataObjectHelperException {
         Objects.requireNonNull(fileName, "fileName must not be null");
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(BUCKET)
-                .key(fileName)
-                .build();
 
         try {
-        s3.deleteObject(deleteObjectRequest);
+            if (exists(fileName)) {
+                DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                        .bucket(BUCKET)
+                        .key(fileName)
+                        .build();
+
+                s3.deleteObject(deleteObjectRequest);
+            } else {
+                throw new KeyNotFoundException("Object not found");
+            }
         } catch (S3Exception e) {
             throw new DataObjectException("Error deleting object" + e.getMessage());
         } catch (AwsServiceException e) {

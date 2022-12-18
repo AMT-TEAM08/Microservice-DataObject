@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -168,5 +169,50 @@ class MicroserviceDataObjectApplicationTests {
 
         // Then
         assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteObjectShouldReturnOk() throws Exception {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc.perform(MockMvcRequestBuilders.multipart(url).file(file));
+
+        // When
+        ResponseEntity<String> response = restTemplate.exchange(url + "/" + FILE_NAME, HttpMethod.DELETE, null, String.class);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteObjectShouldDeleteObject() throws Exception {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc.perform(MockMvcRequestBuilders.multipart(url).file(file));
+
+        // When
+        restTemplate.exchange(url + "/" + FILE_NAME, HttpMethod.DELETE, null, String.class);
+
+        // Then
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.hasBody() && !Objects.requireNonNull(response.getBody()).contains(FILE_NAME));
+    }
+
+    @Test
+    public void deleteObjectShouldReturnNotFound() {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        String notExistingFile = "MXEV1BN39ZFD9MBZC98H";
+
+        // When
+        ResponseEntity<String> response = restTemplate.exchange(url + "/" + notExistingFile, HttpMethod.DELETE, null, String.class);
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
