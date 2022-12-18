@@ -6,7 +6,6 @@ import org.amt.microservicedataobject.dataobject.IDataObjectHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -32,8 +31,7 @@ public class DataObjectController {
             File tempFile = File.createTempFile("temp", "file");
             file.transferTo(tempFile);
             System.out.println("File uploaded: " + tempFile.getAbsolutePath() + " " + tempFile.length());
-            dataObjectHelper.add(file.getName(), tempFile);
-            dataObjectHelper.listObjects().forEach(System.out::println);
+            dataObjectHelper.add(file.getOriginalFilename(), tempFile);
             return ResponseEntity.ok().build();
         } catch (NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
