@@ -1,6 +1,10 @@
 # Data Object Microservice
 This microservice provides a set of REST APIs for managing data objects stored in Amazon Web Services (AWS). It uses the AWSDataObjectHelperImpl class to communicate with AWS and perform various actions such as listing, uploading, deleting, and getting download URLs for data objects stored in AWS.
 
+It has been developped in the context of the AMT Lab along with :
+* [The Label Detector Microservice](https://github.com/Nelson-Jnrnd/AMT-Microservice-LabelDetector)
+* [The main application](https://github.com/Nelson-Jnrnd/AMT-Microservice-Main)
+
 ## Prerequisites
 * A valid AWS account with the S3 service enabled
 * Java 8 or higher
