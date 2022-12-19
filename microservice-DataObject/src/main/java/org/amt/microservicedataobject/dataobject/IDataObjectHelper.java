@@ -1,8 +1,8 @@
 package org.amt.microservicedataobject.dataobject;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Vector;
 
 /**
@@ -41,10 +41,12 @@ public interface IDataObjectHelper {
 
     /**
      * Get a public url to pointing to a given file *
-     * @param fileName to get
+     *
+     * @param fileName     to get
+     * @param linkDuration duration of the link
      * @return Url to the file
      */
-    URL getUrl(String fileName) throws DataObjectHelperException;
+    URL getUrl(String fileName, Duration linkDuration) throws DataObjectHelperException;
 
     /**
      * @return The container's name
@@ -61,6 +63,12 @@ public interface IDataObjectHelper {
 
     class DataObjectHelperException extends Exception {
         public DataObjectHelperException(String message) {
+            super(message);
+        }
+    }
+
+    class InvalidParamException extends DataObjectHelperException {
+        public InvalidParamException(String message) {
             super(message);
         }
     }

@@ -77,12 +77,13 @@ class MicroserviceDataObjectApplicationTests {
     public void getObjectShouldReturnURL() throws Exception {
         // Given
         String url = getBaseUrl() + "/objects";
+        String duration = "1";
         MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(MockMvcRequestBuilders.multipart(url).file(file));
 
         // When
-        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME + "?duration=" + duration, String.class);
 
         // Then
         assertTrue(Objects.requireNonNull(response.getBody()).contains("http"));
@@ -92,12 +93,13 @@ class MicroserviceDataObjectApplicationTests {
     public void getObjectShouldReturnOk() throws Exception {
         // Given
         String url = getBaseUrl() + "/objects";
+        String duration = "1";
         MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(MockMvcRequestBuilders.multipart(url).file(file));
 
         // When
-        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME + "?duration=" + duration, String.class);
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -108,12 +110,51 @@ class MicroserviceDataObjectApplicationTests {
         // Given
         String url = getBaseUrl() + "/objects";
         String notExistingFile = "MXEV1BN39ZFD9MBZC98H";
+        String duration = "1";
 
         // When
-        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + notExistingFile, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + notExistingFile + "?duration=" + duration, String.class);
 
         // Then
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getObjectWithoutDurationShouldReturnBadRequest() {
+        // Given
+        String url = getBaseUrl() + "/objects";
+
+        // When
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME, String.class);
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void getObjectWithInvalidDurationShouldReturnBadRequest() {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        String invalidDuration = "invalid";
+
+        // When
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME + "?duration=" + invalidDuration, String.class);
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void getObjectWithNegativeDurationShouldReturnBadRequest() {
+        // Given
+        String url = getBaseUrl() + "/objects";
+        String negativeDuration = "-1";
+
+        // When
+        ResponseEntity<String> response = restTemplate.getForEntity(url + "/" + FILE_NAME + "?duration=" + negativeDuration, String.class);
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test

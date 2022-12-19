@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,7 +133,7 @@ public class AwsDataObjectHelperImplTest {
         helper.add(TEST_KEY, testFile);
 
         // When
-        URL url = helper.getUrl(TEST_KEY);
+        URL url = helper.getUrl(TEST_KEY, Duration.ofSeconds(1));
 
         // Then
         assertNotNull(url);
@@ -144,12 +144,22 @@ public class AwsDataObjectHelperImplTest {
 
     @Test
     void testGetUrlShouldThrowAnExceptionWhenTheFileIsNotFound() {
-        assertThrows(IDataObjectHelper.KeyNotFoundException.class, () -> helper.getUrl(NOT_FOUND_KEY));
+        assertThrows(IDataObjectHelper.KeyNotFoundException.class, () -> helper.getUrl(NOT_FOUND_KEY, Duration.ofSeconds(1)));
     }
 
     @Test
     void testGetUrlShouldThrowAnExceptionWhenKeyIsNull() {
-        assertThrows(NullPointerException.class, () -> helper.getUrl(null));
+        assertThrows(NullPointerException.class, () -> helper.getUrl(null, Duration.ofSeconds(1)));
+    }
+
+    @Test
+    void testGetUrlShouldThrowAnExceptionWhenDurationIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.getUrl(TEST_KEY, null));
+    }
+
+    @Test
+    void testGetUrlShouldThrowAnExceptionWhenDurationIsNegative() {
+        assertThrows(IllegalArgumentException.class, () -> helper.getUrl(TEST_KEY, Duration.ofMinutes(-1)));
     }
 
     @Test

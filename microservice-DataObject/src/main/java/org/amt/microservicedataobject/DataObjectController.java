@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.net.URL;
+import java.time.Duration;
 
 @RestController
 public class DataObjectController {
@@ -41,7 +42,7 @@ public class DataObjectController {
             System.out.println("File uploaded: " + tempFile.getAbsolutePath() + " " + tempFile.length());
             dataObjectHelper.add(file.getOriginalFilename(), tempFile);
             return ResponseEntity.ok().build();
-        } catch (NullPointerException e){
+        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IDataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -53,11 +54,11 @@ public class DataObjectController {
     }
 
     @GetMapping("/objects/{objectName}")
-    public ResponseEntity<String> getObject(@PathVariable String objectName) {
+    public ResponseEntity<String> getObject(@PathVariable String objectName, @RequestParam("duration") int duration) {
         try {
-            URL downloadURL = dataObjectHelper.getUrl(objectName);
+            URL downloadURL = dataObjectHelper.getUrl(objectName, Duration.ofMinutes(duration));
             return ResponseEntity.ok().body(downloadURL.toString());
-        } catch (NullPointerException e){
+        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IDataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -73,7 +74,7 @@ public class DataObjectController {
         try {
             dataObjectHelper.delete(objectName);
             return ResponseEntity.noContent().build();
-        } catch (NullPointerException e){
+        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IDataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

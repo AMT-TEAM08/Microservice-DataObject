@@ -13,7 +13,6 @@ import software.amazon.awssdk.utils.IoUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
@@ -201,11 +200,18 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
 
     /**
      * Request a publicly accessible url to a file *
-     * @param fileName of the requested file
+     *
+     * @param fileName     of the requested file
+     * @param linkDuration duration of the link validity
      * @return Url to linking to a file
      */
-    public URL getUrl(String fileName) throws DataObjectHelperException {
+    public URL getUrl(String fileName, Duration linkDuration) throws DataObjectHelperException {
         Objects.requireNonNull(fileName, "fileName must not be null");
+        Objects.requireNonNull(linkDuration, "linkDuration must not be null");
+
+        if (linkDuration.isNegative() || linkDuration.isZero()) {
+            throw new InvalidParamException("linkDuration must be positive");
+        }
 
         if(!exists(fileName))
             throw new KeyNotFoundException("Object not found");
@@ -222,7 +228,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
 
         // Create a GetObjectPresignRequest to specify the signature duration
         GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10)) // TODO duration as parameter or constant
+                .signatureDuration(linkDuration)
                 .getObjectRequest(getObjectRequest)
                 .build();
 
