@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,6 +44,12 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
+    void testDeleteShouldThrowAnExceptionWhenFileIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.delete(null));
+    }
+
+
+    @Test
     void testAddShouldAddFileToDataObject() throws IDataObjectHelper.DataObjectHelperException {
 
         // Given some helper
@@ -63,7 +70,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testUpdateShouldUpdateFileFromDataObject() throws IDataObjectHelper.DataObjectHelperException {
+    void testAddShouldUpdateFileFromDataObject() throws IDataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
         byte[] original = helper.get(TEST_KEY);
@@ -76,6 +83,16 @@ public class AwsDataObjectHelperImplTest {
 
         // Clean
         helper.delete(TEST_KEY);
+    }
+
+    @Test
+    void testAddShouldThrowAnExceptionWhenFileIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.add(TEST_KEY, null));
+    }
+
+    @Test
+    void testAddShouldThrowAnExceptionWhenKeyIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.add(null, testFile));
     }
 
     @Test
@@ -106,6 +123,11 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
+    void testExistsShouldThrowAnExceptionWhenKeyIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.exists(null));
+    }
+
+    @Test
     void testGetUrlShouldReturnUrl() throws IDataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
@@ -123,5 +145,40 @@ public class AwsDataObjectHelperImplTest {
     @Test
     void testGetUrlShouldThrowAnExceptionWhenTheFileIsNotFound() {
         assertThrows(IDataObjectHelper.KeyNotFoundException.class, () -> helper.getUrl(NOT_FOUND_KEY));
+    }
+
+    @Test
+    void testGetUrlShouldThrowAnExceptionWhenKeyIsNull() {
+        assertThrows(NullPointerException.class, () -> helper.getUrl(null));
+    }
+
+    @Test
+    void testListObjectsShouldReturnListOfKeys() throws IDataObjectHelper.DataObjectHelperException {
+        // Given
+        helper.add(TEST_KEY, testFile);
+
+        // When
+        Vector<String> keys = helper.listObjects();
+
+        // Then
+        assertTrue(keys.size() > 0);
+
+        // Clean
+        helper.delete(TEST_KEY);
+    }
+
+    @Test
+    void testListObjectsShouldReturnCorrectKeys() throws IDataObjectHelper.DataObjectHelperException {
+        // Given
+        helper.add(TEST_KEY, testFile);
+
+        // When
+        Vector<String> keys = helper.listObjects();
+
+        // Then
+        assertTrue(keys.contains(TEST_KEY));
+
+        // Clean
+        helper.delete(TEST_KEY);
     }
 }

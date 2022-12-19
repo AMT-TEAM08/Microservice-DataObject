@@ -183,7 +183,7 @@ class MicroserviceDataObjectApplicationTests {
         ResponseEntity<String> response = restTemplate.exchange(url + "/" + FILE_NAME, HttpMethod.DELETE, null, String.class);
 
         // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test

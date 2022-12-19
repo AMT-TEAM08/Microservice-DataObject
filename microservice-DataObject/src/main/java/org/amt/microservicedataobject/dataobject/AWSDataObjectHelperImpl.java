@@ -180,6 +180,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
      * @return true if the file exists, false otherwise
      */
     public boolean exists(String fileName) throws DataObjectHelperException {
+        Objects.requireNonNull(fileName, "fileName must not be null");
         HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
                 .bucket(BUCKET)
                 .key(fileName)
