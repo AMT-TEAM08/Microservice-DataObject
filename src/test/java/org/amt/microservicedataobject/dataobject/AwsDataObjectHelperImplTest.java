@@ -159,7 +159,7 @@ public class AwsDataObjectHelperImplTest {
 
     @Test
     void testGetUrlShouldThrowAnExceptionWhenDurationIsNegative() {
-        assertThrows(IllegalArgumentException.class, () -> helper.getUrl(TEST_KEY, Duration.ofMinutes(-1)));
+        assertThrows(IDataObjectHelper.InvalidParamException.class, () -> helper.getUrl(TEST_KEY, Duration.ofMinutes(-1)));
     }
 
     @Test
