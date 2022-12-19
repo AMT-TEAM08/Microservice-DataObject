@@ -172,7 +172,7 @@ class MicroserviceDataObjectApplicationTests {
     }
 
     @Test
-    public void deleteObjectShouldReturnOk() throws Exception {
+    public void deleteObjectShouldReturnNoContent() throws Exception {
         // Given
         String url = getBaseUrl() + "/objects";
         MockMultipartFile file = new MockMultipartFile(FILE_PARAM_NAME, FILE_NAME, FILE_CONTENT_TYPE, FILE_CONTENT);

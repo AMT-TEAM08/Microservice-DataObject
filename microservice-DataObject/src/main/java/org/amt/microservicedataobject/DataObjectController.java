@@ -72,7 +72,7 @@ public class DataObjectController {
     public ResponseEntity<Object> deleteObject(@PathVariable String objectName) {
         try {
             dataObjectHelper.delete(objectName);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IDataObjectHelper.AccessDeniedException e) {

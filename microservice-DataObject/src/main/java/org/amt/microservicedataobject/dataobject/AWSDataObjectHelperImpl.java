@@ -13,6 +13,7 @@ import software.amazon.awssdk.utils.IoUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
@@ -89,6 +90,10 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
     public void add(String targetFileName, File file) throws NullPointerException, DataObjectHelperException {
         Objects.requireNonNull(targetFileName, "targetFileName must not be null");
         Objects.requireNonNull(file, "file must not be null");
+
+        if (!file.exists()) {
+            throw new NullPointerException("File does not exist");
+        }
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(BUCKET)
