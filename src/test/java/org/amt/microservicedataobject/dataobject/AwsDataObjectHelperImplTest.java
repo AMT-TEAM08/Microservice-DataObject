@@ -14,7 +14,7 @@ public class AwsDataObjectHelperImplTest {
 
     final static String TEST_KEY = "test";
     final static String NOT_FOUND_KEY = "notFound";
-    final AWSDataObjectHelperImpl helper = new AWSDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
+    final AwsDataObjectHelperImpl helper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
     static File testFile;
     static File testFile2;
     static File notFoundFile;
@@ -27,7 +27,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testDeleteShouldRemoveFileFromDataObject() throws IDataObjectHelper.DataObjectHelperException {
+    void testDeleteShouldRemoveFileFromDataObject() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
 
@@ -40,7 +40,7 @@ public class AwsDataObjectHelperImplTest {
 
     @Test
     void testDeleteShouldThrowAnExceptionWhenTheFileIsNotFound() {
-        assertThrows(IDataObjectHelper.KeyNotFoundException.class, () -> helper.delete(TEST_KEY));
+        assertThrows(DataObjectHelper.KeyNotFoundException.class, () -> helper.delete(TEST_KEY));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class AwsDataObjectHelperImplTest {
 
 
     @Test
-    void testAddShouldAddFileToDataObject() throws IDataObjectHelper.DataObjectHelperException {
+    void testAddShouldAddFileToDataObject() throws DataObjectHelper.DataObjectHelperException {
 
         // Given some helper
 
@@ -70,7 +70,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testAddShouldUpdateFileFromDataObject() throws IDataObjectHelper.DataObjectHelperException {
+    void testAddShouldUpdateFileFromDataObject() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
         byte[] original = helper.get(TEST_KEY);
@@ -96,7 +96,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testExistsShouldReturnTrueWhenFileExists() throws IDataObjectHelper.DataObjectHelperException {
+    void testExistsShouldReturnTrueWhenFileExists() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
 
@@ -112,7 +112,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testExistsShouldReturnFalseWhenFileDoesNotExist() throws IDataObjectHelper.DataObjectHelperException {
+    void testExistsShouldReturnFalseWhenFileDoesNotExist() throws DataObjectHelper.DataObjectHelperException {
         // Given an empty DataObject
 
         // When
@@ -128,7 +128,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testGetUrlShouldReturnUrl() throws IDataObjectHelper.DataObjectHelperException {
+    void testGetUrlShouldReturnUrl() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
 
@@ -144,7 +144,7 @@ public class AwsDataObjectHelperImplTest {
 
     @Test
     void testGetUrlShouldThrowAnExceptionWhenTheFileIsNotFound() {
-        assertThrows(IDataObjectHelper.KeyNotFoundException.class, () -> helper.getUrl(NOT_FOUND_KEY, Duration.ofSeconds(1)));
+        assertThrows(DataObjectHelper.KeyNotFoundException.class, () -> helper.getUrl(NOT_FOUND_KEY, Duration.ofSeconds(1)));
     }
 
     @Test
@@ -159,11 +159,11 @@ public class AwsDataObjectHelperImplTest {
 
     @Test
     void testGetUrlShouldThrowAnExceptionWhenDurationIsNegative() {
-        assertThrows(IDataObjectHelper.InvalidParamException.class, () -> helper.getUrl(TEST_KEY, Duration.ofMinutes(-1)));
+        assertThrows(DataObjectHelper.InvalidParamException.class, () -> helper.getUrl(TEST_KEY, Duration.ofMinutes(-1)));
     }
 
     @Test
-    void testListObjectsShouldReturnListOfKeys() throws IDataObjectHelper.DataObjectHelperException {
+    void testListObjectsShouldReturnListOfKeys() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
 
@@ -178,7 +178,7 @@ public class AwsDataObjectHelperImplTest {
     }
 
     @Test
-    void testListObjectsShouldReturnCorrectKeys() throws IDataObjectHelper.DataObjectHelperException {
+    void testListObjectsShouldReturnCorrectKeys() throws DataObjectHelper.DataObjectHelperException {
         // Given
         helper.add(TEST_KEY, testFile);
 

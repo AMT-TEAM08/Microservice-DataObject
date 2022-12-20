@@ -1,8 +1,8 @@
 package org.amt.microservicedataobject;
 
-import org.amt.microservicedataobject.dataobject.AWSDataObjectHelperImpl;
+import org.amt.microservicedataobject.dataobject.AwsDataObjectHelperImpl;
 import org.amt.microservicedataobject.dataobject.AwsServiceConfigurator;
-import org.amt.microservicedataobject.dataobject.IDataObjectHelper;
+import org.amt.microservicedataobject.dataobject.DataObjectHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,19 +15,19 @@ import java.time.Duration;
 @RestController
 public class DataObjectController {
 
-    private final IDataObjectHelper dataObjectHelper;
+    private final DataObjectHelper dataObjectHelper;
 
     public DataObjectController() {
-        this.dataObjectHelper = new AWSDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
+        this.dataObjectHelper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
     }
 
     @GetMapping("/objects")
     public ResponseEntity<Object> listObjects() {
         try {
             return new ResponseEntity<>(dataObjectHelper.listObjects(), HttpStatus.OK);
-        } catch (IDataObjectHelper.AccessDeniedException e) {
+        } catch (DataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (IDataObjectHelper.DataObjectNotFoundException e) {
+        } catch (DataObjectHelper.DataObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -42,11 +42,11 @@ public class DataObjectController {
             System.out.println("File uploaded: " + tempFile.getAbsolutePath() + " " + tempFile.length());
             dataObjectHelper.add(file.getOriginalFilename(), tempFile);
             return ResponseEntity.ok().build();
-        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
+        } catch (DataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IDataObjectHelper.AccessDeniedException e) {
+        } catch (DataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (IDataObjectHelper.DataObjectNotFoundException e) {
+        } catch (DataObjectHelper.DataObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -58,11 +58,11 @@ public class DataObjectController {
         try {
             URL downloadURL = dataObjectHelper.getUrl(objectName, Duration.ofMinutes(duration));
             return ResponseEntity.ok().body(downloadURL.toString());
-        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
+        } catch (DataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IDataObjectHelper.AccessDeniedException e) {
+        } catch (DataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (IDataObjectHelper.KeyNotFoundException e) {
+        } catch (DataObjectHelper.KeyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -74,11 +74,11 @@ public class DataObjectController {
         try {
             dataObjectHelper.delete(objectName);
             return ResponseEntity.noContent().build();
-        } catch (IDataObjectHelper.InvalidParamException | NullPointerException e){
+        } catch (DataObjectHelper.InvalidParamException | NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IDataObjectHelper.AccessDeniedException e) {
+        } catch (DataObjectHelper.AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (IDataObjectHelper.KeyNotFoundException e) {
+        } catch (DataObjectHelper.KeyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

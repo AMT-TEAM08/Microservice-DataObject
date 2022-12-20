@@ -21,12 +21,12 @@ import java.util.Vector;
 
 
 /**
- * Implementation of {@link IDataObjectHelper} using AWS services
+ * Implementation of {@link DataObjectHelper} using AWS services
  * @author De Bleser Dimitri
  * @author Peer Vincent
  * @author Nelson Jeanreneaud
  */
-public class AWSDataObjectHelperImpl implements IDataObjectHelper {
+public class AwsDataObjectHelperImpl implements DataObjectHelper {
 
     private final static String BUCKET = "amt.team08.diduno.education";
     private final S3Client s3;
@@ -34,7 +34,7 @@ public class AWSDataObjectHelperImpl implements IDataObjectHelper {
     /**
      * Constructor
      */
-    public AWSDataObjectHelperImpl(AwsServiceConfigurator awsServiceConfigurator) {
+    public AwsDataObjectHelperImpl(AwsServiceConfigurator awsServiceConfigurator) {
         s3 = S3Client.builder()
                 .region(awsServiceConfigurator.getRegion())
                 .credentialsProvider(awsServiceConfigurator.getCredentialsProvider())

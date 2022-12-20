@@ -11,7 +11,7 @@ import java.util.Vector;
  * @author Peer Vincent
  * @author Nelson Jeanreneaud
  */
-public interface IDataObjectHelper {
+public interface DataObjectHelper {
 
     /**
      * Upload a file *
