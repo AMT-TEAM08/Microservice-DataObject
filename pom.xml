@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.amt</groupId>
-    <artifactId>microservice-DataObject</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>microservice-dataobject</artifactId>
+    <version>0.0.1</version>
     <name>microservice-DataObject</name>
     <description>microservice-DataObject</description>
     <properties>
