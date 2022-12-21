@@ -1,5 +1,6 @@
-package org.amt.microservicedataobject.dataobject;
+package org.amt.microservicedataobject.service.aws;
 
+import org.amt.microservicedataobject.service.DataObjectHelper;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;

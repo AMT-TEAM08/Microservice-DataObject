@@ -1,8 +1,8 @@
-package org.amt.microservicedataobject;
+package org.amt.microservicedataobject.controller;
 
-import org.amt.microservicedataobject.dataobject.AwsDataObjectHelperImpl;
-import org.amt.microservicedataobject.dataobject.AwsServiceConfigurator;
-import org.amt.microservicedataobject.dataobject.DataObjectHelper;
+import org.amt.microservicedataobject.service.aws.AwsDataObjectHelperImpl;
+import org.amt.microservicedataobject.service.aws.AwsServiceConfigurator;
+import org.amt.microservicedataobject.service.DataObjectHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

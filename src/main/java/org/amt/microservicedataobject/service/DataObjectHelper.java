@@ -1,4 +1,4 @@
-package org.amt.microservicedataobject.dataobject;
+package org.amt.microservicedataobject.service;
 
 import java.io.File;
 import java.net.URL;

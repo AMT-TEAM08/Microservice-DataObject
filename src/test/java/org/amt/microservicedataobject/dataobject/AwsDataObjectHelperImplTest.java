@@ -1,5 +1,8 @@
 package org.amt.microservicedataobject.dataobject;
 
+import org.amt.microservicedataobject.service.aws.AwsDataObjectHelperImpl;
+import org.amt.microservicedataobject.service.aws.AwsServiceConfigurator;
+import org.amt.microservicedataobject.service.DataObjectHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

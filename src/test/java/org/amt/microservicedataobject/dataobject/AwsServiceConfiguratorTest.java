@@ -1,5 +1,6 @@
 package org.amt.microservicedataobject.dataobject;
 
+import org.amt.microservicedataobject.service.aws.AwsServiceConfigurator;
 import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;

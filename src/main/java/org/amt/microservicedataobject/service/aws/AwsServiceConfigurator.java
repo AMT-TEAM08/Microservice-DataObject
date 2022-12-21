@@ -1,4 +1,4 @@
-package org.amt.microservicedataobject.dataobject;
+package org.amt.microservicedataobject.service.aws;
 
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
