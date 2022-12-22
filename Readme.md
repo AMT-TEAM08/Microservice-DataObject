@@ -102,5 +102,5 @@ at /root/.aws, and with the host's port 8080 mapped to the container's port 8080
 This will allow the container to use the host's AWS credentials and to be accessed from the host.
 ## Authors
 * De Bleser Dimitri
-* Peer Vincent
+* Vincent Peer
 * Jeanreneaud Nelson
