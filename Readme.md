@@ -103,4 +103,4 @@ This will allow the container to use the host's AWS credentials and to be access
 ## Authors
 * De Bleser Dimitri
 * Peer Vincent
-* Nelson Jeanreneaud
+* Jeanreneaud Nelson
