@@ -1,12 +1,14 @@
 package org.amt.microservicedataobject.dataobject;
 
 import org.amt.microservicedataobject.service.aws.AwsServiceConfigurator;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 public class AwsServiceConfiguratorTest {
 
     private static final Region DEFAULT_REGION = Region.EU_WEST_2;

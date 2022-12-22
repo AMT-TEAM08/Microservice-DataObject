@@ -18,7 +18,7 @@ public class DataObjectController {
     private final DataObjectHelper dataObjectHelper;
 
     public DataObjectController() {
-        this.dataObjectHelper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
+        this.dataObjectHelper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().withEnvironmentVariables().build());
     }
 
     @GetMapping("/objects")
@@ -69,6 +69,7 @@ public class DataObjectController {
         } catch (DataObjectHelper.KeyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -85,6 +86,7 @@ public class DataObjectController {
         } catch (DataObjectHelper.KeyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

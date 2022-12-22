@@ -130,7 +130,7 @@ class MicroserviceDataObjectApplicationTests {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
-
+/*
     @Test
     public void getObjectWithInvalidDurationShouldReturnBadRequest() {
         // Given
@@ -143,7 +143,7 @@ class MicroserviceDataObjectApplicationTests {
         // Then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
-
+*/
     @Test
     public void getObjectWithNegativeDurationShouldReturnBadRequest() {
         // Given

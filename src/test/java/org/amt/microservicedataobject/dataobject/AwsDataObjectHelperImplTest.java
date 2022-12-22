@@ -17,7 +17,7 @@ public class AwsDataObjectHelperImplTest {
 
     final static String TEST_KEY = "test";
     final static String NOT_FOUND_KEY = "notFound";
-    final AwsDataObjectHelperImpl helper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().build());
+    final AwsDataObjectHelperImpl helper = new AwsDataObjectHelperImpl(new AwsServiceConfigurator.Builder().withEnvironmentVariables().build());
     static File testFile;
     static File testFile2;
     static File notFoundFile;
