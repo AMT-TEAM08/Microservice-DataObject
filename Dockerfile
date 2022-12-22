@@ -1,6 +1,6 @@
 FROM amazoncorretto:17.0.5 
 
-WORKDIR /app
+WORKDIR /root
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./

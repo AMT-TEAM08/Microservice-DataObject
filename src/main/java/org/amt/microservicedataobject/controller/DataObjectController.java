@@ -43,12 +43,16 @@ public class DataObjectController {
             dataObjectHelper.add(file.getOriginalFilename(), tempFile);
             return ResponseEntity.ok().build();
         } catch (DataObjectHelper.InvalidParamException | NullPointerException e){
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (DataObjectHelper.AccessDeniedException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (DataObjectHelper.DataObjectNotFoundException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -84,5 +88,4 @@ public class DataObjectController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 }
