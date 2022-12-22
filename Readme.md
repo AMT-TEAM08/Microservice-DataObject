@@ -82,3 +82,25 @@ This microservice has the following dependencies:
 
 * Spring Framework
 * Amazon Web Services SDK for Java
+
+## Dockerization
+This microservice can be dockerized using the provided Dockerfile. The following command can be used to build the Docker image:
+
+```
+docker build -t dataobject . 
+```
+
+The following command can be used to run the Docker image:
+
+```
+docker run -v $HOME/.aws:/root/.aws:ro -p 8080:8080 dataobject
+```
+This command will run a Docker container based on the dataobject image, 
+with the host's $HOME/.aws directory mounted in the container as a read-only volume 
+at /root/.aws, and with the host's port 8080 mapped to the container's port 8080.
+
+This will allow the container to use the host's AWS credentials and to be accessed from the host.
+## Authors
+* De Bleser Dimitri
+* Peer Vincent
+* Nelson Jeanreneaud
