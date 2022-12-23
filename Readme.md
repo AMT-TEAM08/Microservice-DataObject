@@ -87,9 +87,9 @@ This microservice has the following dependencies:
 This microservice can be dockerized using the provided Dockerfile. The following command can be used to build the Docker image:
 
 ```
-docker build --build-arg ACCESS_KEY_ARG=$ACCESS_KEY_ENV --build-arg SECRET_KEY_ARG=$SECRET_KEY_ENV --target test -t dataobject .
+docker build --build-arg ACCESS_KEY_ARG=$ACCESS_KEY_ENV --build-arg SECRET_KEY_ARG=$SECRET_KEY_ENV --target <TARGET> -t dataobject .
 ```
-
+Where <TARGET> should be replace by "test" to build all tests or by "production" to build the final image that will be run later.
 The following command can be used to run the Docker image:
 
 ```
