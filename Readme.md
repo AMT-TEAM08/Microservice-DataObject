@@ -87,13 +87,13 @@ This microservice has the following dependencies:
 This microservice can be dockerized using the provided Dockerfile. The following command can be used to build the Docker image:
 
 ```
-docker build --build-arg ACCESS_KEY_ARG=$ACCESS_KEY_ENV --build-arg SECRET_KEY_ARG=$SECRET_KEY_ENV --target test .
+docker build --build-arg ACCESS_KEY_ARG=$ACCESS_KEY_ENV --build-arg SECRET_KEY_ARG=$SECRET_KEY_ENV --target test -t dataobject .
 ```
 
 The following command can be used to run the Docker image:
 
 ```
-docker run -v $HOME/.aws:/root/.aws:ro -p 8080:8080 dataobject
+docker run -p 8080:8080 dataobject
 ```
 This command will run a Docker container based on the dataobject image, 
 with the host's $HOME/.aws directory mounted in the container as a read-only volume 
