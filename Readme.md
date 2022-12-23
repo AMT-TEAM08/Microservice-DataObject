@@ -11,7 +11,7 @@ More general information on the project are available on this [wiki](https://git
 
 ## Prerequisites
 * A valid AWS account with the S3 service enabled
-* Java 8 or higher
+* Java 17 or higher
 * Maven
 
 ## API Endpoints
